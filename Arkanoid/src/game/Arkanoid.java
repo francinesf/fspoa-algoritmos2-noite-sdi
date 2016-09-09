@@ -12,8 +12,9 @@ import com.senac.SimpleJava.Graphics.events.KeyboardAction;
 public class Arkanoid extends GraphicApplication {
 
 	private Bola bola;
-	private Sprite quadrado, paddel;
-	private boolean desenhaQuadrado = true; 
+	private Quadrado quadrado;
+	private Sprite paddel;
+	private Quadrado quadrado2; 
 	
 	@Override
 	protected void draw(Canvas canvas) {		
@@ -21,9 +22,9 @@ public class Arkanoid extends GraphicApplication {
 		
 		bola.draw(canvas);
 		
-		if(desenhaQuadrado ){
-			quadrado.draw(canvas);
-		}
+		quadrado.draw(canvas);
+		quadrado2.draw(canvas);
+		
 		paddel.draw(canvas);
 	}
 
@@ -36,11 +37,14 @@ public class Arkanoid extends GraphicApplication {
 		bola = new Bola();
 		bola.setPosition(150, 150);
 		
-		quadrado = new Sprite(18, 10, Color.BLUE);
+		quadrado = new Quadrado(Color.BLUE);
 		quadrado.setPosition(50, 50);
+		quadrado2 = new Quadrado(Color.GREEN);
+		quadrado2.setPosition(70, 50);
 		
 		paddel = new Sprite(20, 5, Color.RED);
 		paddel.setPosition(Resolution.MSX.width/2 - 10, Resolution.MSX.height - 25);
+		
 		this.bindKeyPressed("LEFT", new KeyboardAction() {
 			@Override
 			public void handleEvent() {
@@ -62,34 +66,19 @@ public class Arkanoid extends GraphicApplication {
 	
 		Point posicao = bola.getPosition();
 	
+		if (paddle.colidiu(bola))
+				bola.direcaoY();
+		
 		if(posicao.y <= 0 || posicao.y >= Resolution.MSX.height-5){
 			bola.direcaoY();
 		}
 		if(posicao.x <= 0 || posicao.x >= Resolution.MSX.width-5){
 			bola.direcaoX();
 		}
-		boolean bateu = true;
-		Point posicaoQuadrado = quadrado.getPosition();
-		// Se qualquer teste for verdadeiro, a bola nao bateu no quadrado.
-		if (posicao.x > posicaoQuadrado.x + quadrado.getWidth()) 
-		{
-			bateu = false; 
-		}
-		if (posicao.x  + bola.getWidth() < posicaoQuadrado.x) 
-		{
-			bateu = false;
-		}
-		if (posicao.y > posicaoQuadrado.y + quadrado.getHeight()) 
-		{
-			bateu = false;
-		}
-		if (posicao.y  + bola.getHeight() < posicaoQuadrado.y) 
-		{
-			bateu = false;
-		}
 		
-		desenhaQuadrado = !bateu;
-		
+		quadrado.colidiu(bola);
+		quadrado2.colidiu(bola);
+
 		redraw();
 	}
 }
