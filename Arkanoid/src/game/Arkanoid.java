@@ -12,9 +12,9 @@ import com.senac.SimpleJava.Graphics.events.KeyboardAction;
 public class Arkanoid extends GraphicApplication {
 
 	private Bola bola;
-	private Quadrado quadrado;
-	private Sprite paddel;
-	private Quadrado quadrado2; 
+	private Quadrado[] quadrado = new Quadrado [10];
+	private Paddle paddle;
+	private int posiQuadX = 10; 
 	
 	@Override
 	protected void draw(Canvas canvas) {		
@@ -22,10 +22,11 @@ public class Arkanoid extends GraphicApplication {
 		
 		bola.draw(canvas);
 		
-		quadrado.draw(canvas);
-		quadrado2.draw(canvas);
+		for(Quadrado q : quadrado){
+			q.draw(canvas);
+		}
 		
-		paddel.draw(canvas);
+		paddle.draw(canvas);
 	}
 
 	@Override
@@ -37,25 +38,30 @@ public class Arkanoid extends GraphicApplication {
 		bola = new Bola();
 		bola.setPosition(150, 150);
 		
-		quadrado = new Quadrado(Color.BLUE);
-		quadrado.setPosition(50, 50);
-		quadrado2 = new Quadrado(Color.GREEN);
-		quadrado2.setPosition(70, 50);
+		for(int i = 0; i < 10; i++){
+			Quadrado novoQuadrado = new Quadrado(Color.BLUE);
+			novoQuadrado.setPosition(posiQuadX, 20);
+			quadrado[i] = novoQuadrado;
+			Point posicao = quadrado[i].getPosition();
+			posiQuadX = (int) posicao.x;
+			posiQuadX = posiQuadX + 18;
+			posiQuadX++;
+		}
 		
-		paddel = new Sprite(20, 5, Color.RED);
-		paddel.setPosition(Resolution.MSX.width/2 - 10, Resolution.MSX.height - 25);
+		paddle = new Paddle();
+		paddle.setPosition(Resolution.MSX.width/2 - 10, Resolution.MSX.height - 15);
 		
 		this.bindKeyPressed("LEFT", new KeyboardAction() {
 			@Override
 			public void handleEvent() {
-				paddel.move(-3, 0);
+				paddle.move(-3, 0);
 			}
 		});
 		
 		this.bindKeyPressed("RIGHT", new KeyboardAction() {
 			@Override
 			public void handleEvent() {
-				paddel.move(+3, 0);
+				paddle.move(+3, 0);
 			}
 		});
 	}
@@ -76,8 +82,12 @@ public class Arkanoid extends GraphicApplication {
 			bola.direcaoX();
 		}
 		
-		quadrado.colidiu(bola);
-		quadrado2.colidiu(bola);
+		for (int i = 0; i < 10; i++){
+			if (quadrado[i].colidiu(bola)){
+				bola.direcaoY();
+			}
+		}
+		
 
 		redraw();
 	}
