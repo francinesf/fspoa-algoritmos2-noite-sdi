@@ -6,15 +6,15 @@ import com.senac.SimpleJava.Graphics.Color;
 import com.senac.SimpleJava.Graphics.GraphicApplication;
 import com.senac.SimpleJava.Graphics.Point;
 import com.senac.SimpleJava.Graphics.Resolution;
-import com.senac.SimpleJava.Graphics.Sprite;
 import com.senac.SimpleJava.Graphics.events.KeyboardAction;
 
 public class Arkanoid extends GraphicApplication {
 
 	private Bola bola;
-	private Quadrado[] quadrado = new Quadrado [10];
+	private Quadrado[] quadrado = new Quadrado [50];
 	private Paddle paddle;
 	private int posiQuadX = 10; 
+	private int posiQuadY = 20; 
 	
 	@Override
 	protected void draw(Canvas canvas) {		
@@ -38,14 +38,17 @@ public class Arkanoid extends GraphicApplication {
 		bola = new Bola();
 		bola.setPosition(150, 150);
 		
-		for(int i = 0; i < 10; i++){
+		int numBlocosPorLinha = 10;
+		for(int i = 0; i < quadrado.length; i++){
 			Quadrado novoQuadrado = new Quadrado(Color.BLUE);
-			novoQuadrado.setPosition(posiQuadX, 20);
 			quadrado[i] = novoQuadrado;
+			novoQuadrado.setPosition(posiQuadX + (i%numBlocosPorLinha) * 20, posiQuadY + (i/numBlocosPorLinha) * 12);
+			/*
 			Point posicao = quadrado[i].getPosition();
 			posiQuadX = (int) posicao.x;
 			posiQuadX = posiQuadX + 18;
 			posiQuadX++;
+			*/
 		}
 		
 		paddle = new Paddle();
@@ -54,14 +57,20 @@ public class Arkanoid extends GraphicApplication {
 		this.bindKeyPressed("LEFT", new KeyboardAction() {
 			@Override
 			public void handleEvent() {
-				paddle.move(-3, 0);
+				Point posicao = paddle.getPosition();
+				if(posicao.x != Resolution.MSX.width-5){
+					paddle.move(-3, 0);
+				}
 			}
 		});
 		
 		this.bindKeyPressed("RIGHT", new KeyboardAction() {
 			@Override
 			public void handleEvent() {
-				paddle.move(+3, 0);
+				Point posicao = paddle.getPosition();
+				if(posicao.x != Resolution.MSX.width-5){
+					paddle.move(+3, 0);
+				}
 			}
 		});
 	}
@@ -82,7 +91,7 @@ public class Arkanoid extends GraphicApplication {
 			bola.direcaoX();
 		}
 		
-		for (int i = 0; i < 10; i++){
+		for (int i = 0; i < quadrado.length; i++){
 			if (quadrado[i].colidiu(bola)){
 				bola.direcaoY();
 			}
