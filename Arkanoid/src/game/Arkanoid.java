@@ -27,6 +27,18 @@ public class Arkanoid extends GraphicApplication {
 		}
 		
 		paddle.draw(canvas);
+		
+		Point posicao = bola.getPosition();
+	if(posicao.y <= 0 || posicao.y >= Resolution.MSX.height-5){
+			
+		canvas.putText(45, 25, 60, "Fim de Jogo");
+			
+			/* para jogo
+			 * exibe texto
+			 * inicia jogo do zero */
+		}
+	
+		
 	}
 
 	@Override
@@ -58,9 +70,18 @@ public class Arkanoid extends GraphicApplication {
 			@Override
 			public void handleEvent() {
 				Point posicao = paddle.getPosition();
-				if(posicao.x != Resolution.MSX.width-5){
-					paddle.move(-3, 0);
+				if(posicao.x <= 0 || posicao.x >= Resolution.MSX.width-5){
+					paddle.move(0,0);
 				}
+				else {
+					paddle.move(-5, 0);
+				}
+				
+					
+			/*	Point posicao = paddle.getPosition();
+				if(posicao.x != Resolution.MSX.width-5){
+					paddle.move(-3, 0); 	
+				}*/
 			}
 		});
 		
@@ -68,8 +89,11 @@ public class Arkanoid extends GraphicApplication {
 			@Override
 			public void handleEvent() {
 				Point posicao = paddle.getPosition();
-				if(posicao.x != Resolution.MSX.width-5){
-					paddle.move(+3, 0);
+				if(posicao.x >= Resolution.MSX.width-31){
+					paddle.move(0,0);
+				}
+				else {
+					paddle.move(+5, 0);
 				}
 			}
 		});
@@ -90,6 +114,7 @@ public class Arkanoid extends GraphicApplication {
 		if(posicao.x <= 0 || posicao.x >= Resolution.MSX.width-5){
 			bola.direcaoX();
 		}
+	
 		
 		for (int i = 0; i < quadrado.length; i++){
 			if (quadrado[i].colidiu(bola)){
