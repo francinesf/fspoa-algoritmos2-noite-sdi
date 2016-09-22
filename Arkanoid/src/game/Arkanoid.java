@@ -29,10 +29,12 @@ public class Arkanoid extends GraphicApplication {
 		paddle.draw(canvas);
 		
 		Point posicao = bola.getPosition();
-	if(posicao.y <= 0 || posicao.y >= Resolution.MSX.height-5){
-			
-		canvas.putText(45, 25, 60, "Fim de Jogo");
-			
+	if(posicao.y >= Resolution.MSX.height-5){
+		
+			canvas.clear();
+			canvas.putText(45, 25, 60, "Fim de Jogo");
+		
+		
 			/* para jogo
 			 * exibe texto
 			 * inicia jogo do zero */
@@ -114,7 +116,13 @@ public class Arkanoid extends GraphicApplication {
 		if(posicao.x <= 0 || posicao.x >= Resolution.MSX.width-5){
 			bola.direcaoX();
 		}
-	
+		if(posicao.y >= Resolution.MSX.height-5){
+			
+			
+				/* para jogo
+				 * exibe texto
+				 * inicia jogo do zero */
+			}
 		
 		for (int i = 0; i < quadrado.length; i++){
 			if (quadrado[i].colidiu(bola)){
