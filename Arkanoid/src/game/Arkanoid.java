@@ -29,7 +29,8 @@ public class Arkanoid extends GraphicApplication {
 		
 		Point posicao = bola.getPosition();
 		
-		if(posicao.y >= Resolution.MSX.height-5){			
+		if(posicao.y >= Resolution.MSX.height-5){	
+			canvas.putText(20, 30, 50, "Você morreu!");
 			try { Thread.sleep (02000); } catch (InterruptedException ex) {}			
 			setup();
 		}
@@ -60,8 +61,7 @@ public class Arkanoid extends GraphicApplication {
 				Point posicao = paddle.getPosition();
 				if(posicao.x <= 0 || posicao.x >= Resolution.MSX.width-5){
 					paddle.move(0,0);
-				}
-				else {
+				} else {
 					paddle.move(-5, 0);
 				}
 			}
@@ -73,8 +73,7 @@ public class Arkanoid extends GraphicApplication {
 				Point posicao = paddle.getPosition();
 				if(posicao.x >= Resolution.MSX.width-31){
 					paddle.move(0,0);
-				}
-				else {
+				} else {
 					paddle.move(+5, 0);
 				}
 			}

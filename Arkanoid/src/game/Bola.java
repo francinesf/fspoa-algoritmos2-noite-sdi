@@ -5,8 +5,8 @@ import com.senac.SimpleJava.Graphics.Sprite;
 
 public class Bola extends Sprite {
 	
-	private double dy = -2;
-	private int dx = -2;
+	private double dy = -1;
+	private int dx = -1;
 	
 	public Bola (){
 		super(5, 5, Color.BLACK);
