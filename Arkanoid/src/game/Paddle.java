@@ -6,7 +6,6 @@ import com.senac.SimpleJava.Graphics.Sprite;
 
 public class Paddle extends Sprite {
 
-
 	public Paddle() {
 		super(30, 5, Color.RED);
 	}
@@ -36,7 +35,6 @@ public class Paddle extends Sprite {
 		}			
 		
 		return bateu;
-		
 		
 	}
 	
