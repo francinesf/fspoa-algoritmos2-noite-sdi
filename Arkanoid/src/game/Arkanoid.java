@@ -13,7 +13,11 @@ public class Arkanoid extends GraphicApplication {
 	private Quadrado[] quadrado = new Quadrado [50];
 	private Paddle paddle;
 	private int posiQuadX = 10; 
-	private int posiQuadY = 20; 
+	private int posiQuadY = 20;
+	private boolean mensagem = false;
+	private int tempo;
+	private boolean jogando = false; 
+	private Color[] cores = { Color.GRAY, Color.GREEN, Color.MAGENTA, Color.BLUE, Color.CYAN};
 	
 	@Override
 	protected void draw(Canvas canvas) {		
@@ -28,11 +32,9 @@ public class Arkanoid extends GraphicApplication {
 		paddle.draw(canvas);
 		
 		Point posicao = bola.getPosition();
-		
-		if(posicao.y >= Resolution.MSX.height-5){	
-			canvas.putText(20, 30, 50, "VocÃª morreu!");
-			try { Thread.sleep (02000); } catch (InterruptedException ex) {}			
-			setup();
+
+		if(mensagem){
+			canvas.putText(20, 30, 30, "Você morreu!");
 		}
 	}
 
@@ -47,7 +49,8 @@ public class Arkanoid extends GraphicApplication {
 		
 		int numBlocosPorLinha = 10;
 		for(int i = 0; i < quadrado.length; i++){
-			Quadrado novoQuadrado = new Quadrado(Color.BLUE);
+			int linha = i / numBlocosPorLinha;
+			Quadrado novoQuadrado = new Quadrado(cores[linha]);
 			quadrado[i] = novoQuadrado;
 			novoQuadrado.setPosition(posiQuadX + (i%numBlocosPorLinha) * 20, posiQuadY + (i/numBlocosPorLinha) * 12);
 		}
@@ -59,8 +62,8 @@ public class Arkanoid extends GraphicApplication {
 			@Override
 			public void handleEvent() {
 				Point posicao = paddle.getPosition();
-				if(posicao.x <= 0 || posicao.x >= Resolution.MSX.width-5){
-					paddle.move(0,0);
+				if(posicao.x <= 0 || posicao.x >= Resolution.MSX.width){
+					paddle.move(0, 0);
 				} else {
 					paddle.move(-5, 0);
 				}
@@ -71,38 +74,55 @@ public class Arkanoid extends GraphicApplication {
 			@Override
 			public void handleEvent() {
 				Point posicao = paddle.getPosition();
-				if(posicao.x >= Resolution.MSX.width-31){
-					paddle.move(0,0);
+				if(posicao.x >= Resolution.MSX.width-33){
+					paddle.move(0, 0);
 				} else {
 					paddle.move(+5, 0);
 				}
 			}
 		});
+		
+		jogando = true;
 	}
 
 	@Override
 	protected void loop() {
-		bola.move();
-	
-		Point posicao = bola.getPosition();
-	
-		if (paddle.colidiu(bola))
-			bola.direcaoY();
+		if(jogando){
+			bola.move();
+			
+			Point posicao = bola.getPosition();
 		
-		if(posicao.y <= 0 || posicao.y >= Resolution.MSX.height-5){
-			bola.direcaoY();
-		}
-		if(posicao.x <= 0 || posicao.x >= Resolution.MSX.width-5){
-			bola.direcaoX();
-		}
-		
-		for (int i = 0; i < quadrado.length; i++){
-			if (quadrado[i].colidiu(bola)){
+			if (paddle.colidiu(bola))
+				bola.direcaoY();
+			
+			if(posicao.y <= 0 || posicao.y >= Resolution.MSX.height-5){
 				bola.direcaoY();
 			}
-		}
+			if(posicao.x <= 0 || posicao.x >= Resolution.MSX.width-5){
+				bola.direcaoX();
+			}
+			
+			for (int i = 0; i < quadrado.length; i++){
+				if (quadrado[i].colidiu(bola)){
+					bola.direcaoY();
+				}
+			}
 
-		redraw();
+			if(posicao.y >= Resolution.MSX.height-5){
+				mensagem = true;
+				tempo = 3 * 60;
+				jogando  = false;
+			}
+			redraw();
+		}
+		
+		if(mensagem){
+			tempo--;
+			if(tempo==0){
+				mensagem=false;
+				setup();
+			}
+		}		
 		
 	}
 }
